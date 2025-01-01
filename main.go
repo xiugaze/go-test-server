@@ -1,16 +1,18 @@
 package main
 
 import (
-  "fmt"
-  "net/http"
+	"fmt"
+	"net/http"
+	"os"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-  fmt.Fprintln(w, "Hello, World!")
-}
-
 func main() {
-  http.HandleFunc("/", handler)
+  staticPath := os.Getenv("STATIC_FILES_PATH")
+  if staticPath == "" {
+    staticPath = "./static"
+  }
+
+  http.Handle("/", http.FileServer(http.Dir(staticPath)))
 
   fmt.Println("Server is starting on port 9999...")
   err := http.ListenAndServe(":9999", nil)

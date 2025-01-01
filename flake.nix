@@ -1,5 +1,5 @@
 {
-  description = "test flake for go dev";
+  description = "Go web server test flake";
   inputs = {
     nixpkgs = {
       url = "nixpkgs/nixos-unstable";
@@ -24,10 +24,15 @@
       packages = {
         default = pkgs.buildGoApplication {
           pname = "go-test-server";
-          version = "1.0.0";
+          version = "1.0.1";
           src = ./.;
           modules = ./gomod2nix.toml;
           buildinputs = with pkgs; [ ];
+
+          postInstall = ''
+              mkdir -p $out/share/go-test-server
+              cp -r ./static $out/share/go-test-server/
+          '';
         };
       };
 
